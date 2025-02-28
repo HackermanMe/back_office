@@ -1,0 +1,98 @@
+<!-- Liste des véhicules -->
+<div class="container pt-4 pb-5">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h2 mb-0">Liste des véhicules</h1>
+            <p class="text-muted">Gérez vos annonces de véhicules</p>
+        </div>
+        <a routerLink="./new" class="btn btn-primary">
+            <i class="fi-plus me-2"></i>
+            Ajouter un véhicule
+        </a>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card card-body border-0 shadow-sm mb-4">
+        <div class="row g-3">
+            <div class="col-sm-6 col-md-4">
+                <label class="form-label">Marque</label>
+                <select class="form-select" (change)="filterByMarque($event)">
+                    <option value="">Toutes les marques</option>
+                    <option *ngFor="let marque of getUniqueMarques()" [value]="marque">
+                        {{marque}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Rechercher</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" 
+                           placeholder="Modèle, année..." 
+                           (input)="onSearch($event)">
+                    <button class="btn btn-primary"><i class="fi-search"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste -->
+    <div class="card card-body border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Titre</th>
+                        <th>Marque / Modèle</th>
+                        <th>Année</th>
+                        <th>Prix</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (car of allCars; track car.trackingid) {
+                    <tr>
+                        <td style="width: 100px">
+                            <img [src]="car.images && car.images.length > 0 ? 'http://localhost:8080' + car.images[0] : '/assets/images/placeholder.jpg'" 
+                                 class="rounded" 
+                                 style="width: 80px; height: 60px; object-fit: cover" 
+                                 [alt]="car.titre"
+                                >
+                        </td>
+                        <td>
+                            <h6 class="mb-1">{{car.titre}}</h6>
+                            <span class="fs-sm text-muted">{{car.puissance}} ch</span>
+                        </td>
+                        <td>
+                            <span>{{car.modele?.marque?.nom}} {{car.modele?.nom}}</span>
+                        </td>
+                        <td>{{car.annee}}</td>
+                        <td>{{car.prix | number}} FCFA</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-secondary" 
+                                        title="Modifier"
+                                        (click)="editCar(car.trackingid!)">
+                                    <i class="fi-edit"></i>
+                                </button>
+                                <button class="btn btn-danger" 
+                                        title="Supprimer"
+                                        (click)="deleteCar(car.trackingid!)">
+                                    <i class="fi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                    @if (allCars.length === 0) {
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            Aucun véhicule trouvé
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

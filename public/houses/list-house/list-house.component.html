@@ -1,0 +1,59 @@
+<!-- Contenu de la page -->
+<div class="container-fluid pt-4 pb-5">
+  <div class="row">
+    <!-- Liste des propriétés -->
+    <div class="col-12">
+      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+          <h1 class="h2 mb-0">Liste des propriétés</h1>
+          <p class="text-muted">Gérez vos propriétés</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-primary" routerLink="/admin/houses/new">
+            <i class="fi-plus me-2"></i>
+            Ajouter une propriété
+          </button>
+        </div>
+      </div>
+
+      <!-- Liste des propriétés -->
+      <div class="card card-body border-0 shadow-sm p-4">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Titre</th>
+                <th>Type</th>
+                <th>Statut</th>
+                <th>Prix</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <img src="assets/img/listings/real-estate/01.jpg" class="rounded" width="60" alt="Propriété">
+                </td>
+                <td>Maison moderne</td>
+                <td>Maison</td>
+                <td><span class="badge bg-info">À vendre</span></td>
+                <td>250 000 €</td>
+                <td>
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-sm btn-secondary">
+                      <i class="fi-edit"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger">
+                      <i class="fi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,266 @@
+<!-- Page content -->
+<div class="container pt-4 pb-5">
+    <div class="row justify-content-center">
+      <!-- Formulaire d'ajout de terrain -->
+      <div class="col-lg-10">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h1 class="h2 mb-0">Ajouter un terrain</h1>
+            <p class="text-muted">Remplissez les informations du terrain</p>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#previewModal">
+              <i class="fi-eye me-2"></i>
+              Aperçu
+            </button>
+            <button type="button" class="btn btn-primary" routerLink="../">
+              <i class="fi-list me-2"></i>
+              Liste des terrains
+            </button>
+          </div>
+        </div>
+  
+        <form id="addLandForm" (ngSubmit)="onSubmit()">
+          <!-- Photos -->
+          <section class="card card-body border-0 shadow-sm p-4 mb-4">
+            <h2 class="h4 mb-4">Photos</h2>
+            <div class="alert alert-info d-flex mb-4">
+              <i class="fi-info-circle me-2 me-sm-3"></i>
+              <p class="fs-sm mb-0">Vous pouvez ajouter jusqu'à 10 photos. Format supporté : JPG, JPEG ou PNG. Taille maximale : 2MB.</p>
+            </div>
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="uploadInput" class="d-flex align-items-center justify-content-center position-relative h-100 cursor-pointer bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-4">
+                  <div class="text-center">
+                    <i class="fi-plus-circle fs-3 text-muted mb-2"></i>
+                    <div class="text-muted">Glissez vos photos ici ou cliquez pour sélectionner</div>
+                  </div>
+                </label>
+                <input #fileInput type="file" id="uploadInput" class="d-none" accept="image/jpeg,image/png" multiple (change)="handleFileInput($event)">
+              </div>
+            </div>
+            <!-- Preview des images -->
+            <div class="row mt-4 g-3">
+              <div class="col-4" *ngFor="let preview of previews; let i = index">
+                <div class="position-relative">
+                  <img [src]="preview" class="img-fluid rounded">
+                  <button type="button" class="btn-close position-absolute top-0 end-0 m-2" (click)="removeFile(i)"></button>
+                </div>
+              </div>
+            </div>
+          </section>
+  
+          <!-- Informations de base -->
+          <section class="card card-body border-0 shadow-sm p-4 mb-4">
+            <h2 class="h4 mb-4">Informations de base</h2>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label" for="title">Titre de l'annonce <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" id="title" [(ngModel)]="land.titre" name="titre" required>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label" for="surface">Surface (m²) <span class="text-danger">*</span></label>
+                <input type="number" class="form-control form-control-lg" id="surface" [(ngModel)]="land.surface" name="surface" required>
+              </div>
+            </div>
+          </section>
+  
+          <!-- Localisation -->
+          <section class="card card-body border-0 shadow-sm p-4 mb-4">
+            <h2 class="h4 mb-4">Localisation</h2>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label" for="address">Adresse <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" id="address" [(ngModel)]="land.adresse" name="adresse" required>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label" for="city">Ville <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-lg" id="city" [(ngModel)]="land.ville" name="ville" required>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label" for="state">Région</label>
+                <input type="text" class="form-control form-control-lg" id="state" [(ngModel)]="land.district" name="district">
+              </div>
+            </div>
+          </section>
+  
+          <!-- Équipements -->
+          <section class="card card-body border-0 shadow-sm p-4 mb-4">
+            <h2 class="h4 mb-4">Équipements</h2>
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="d-flex flex-wrap gap-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="water" [(ngModel)]="land.aEau" name="aEau">
+                    <label class="form-check-label" for="water">Accès à l'eau</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="electricity" [(ngModel)]="land.aElectricite" name="aElectricite">
+                    <label class="form-check-label" for="electricity">Accès à l'électricité</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="constructible" [(ngModel)]="land.constructible" name="constructible">
+                    <label class="form-check-label" for="constructible">Terrain constructible</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Caractéristiques -->
+          <section class="card card-body border-0 shadow-sm p-4 mb-4">
+            <h2 class="h4 mb-4">Caractéristiques du terrain</h2>
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="d-flex flex-wrap gap-3">
+                  @for(caracteristique of caracteristiquesDisponibles; track caracteristique) {
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" [id]="caracteristique" 
+                             [checked]="land.caracteristiques.includes(caracteristique)"
+                             (change)="updateCaracteristiques(caracteristique, $event)">
+                      <label class="form-check-label" [for]="caracteristique">{{ caracteristique }}</label>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </section>
+  
+          <!-- Prix -->
+          <section class="card card-body border-0 shadow-sm p-4 mb-4">
+            <h2 class="h4 mb-4">Prix</h2>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label" for="price">Prix <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input type="number" class="form-control form-control-lg" id="price" [(ngModel)]="land.prix" name="prix" required>
+                  <span class="input-group-text">FCFA</span>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="negotiable" [(ngModel)]="land.negociable" name="negociable">
+                  <label class="form-check-label" for="negotiable">Prix négociable</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="paiementEnPlus" [(ngModel)]="land.paiementEnPlus" name="paiementEnPlus">
+                  <label class="form-check-label" for="paiementEnPlus">Paiement en plus</label>
+                </div>
+              </div>
+            </div>
+          </section>
+  
+          <!-- Description -->
+          <section class="card card-body border-0 shadow-sm p-4 mb-4">
+            <h2 class="h4 mb-4">Description</h2>
+            <div class="mb-4">
+              <label class="form-label" for="description">Description détaillée <span class="text-danger">*</span></label>
+              <textarea class="form-control form-control-lg" id="description" rows="6" [(ngModel)]="land.description" name="description" required></textarea>
+            </div>
+            <div class="alert alert-info d-flex mb-0">
+              <i class="fi-info-circle me-2 me-sm-3"></i>
+              <p class="fs-sm mb-0">Une description détaillée augmente les chances de vente.</p>
+            </div>
+          </section>
+  
+          <!-- Documents -->
+          <section class="card card-body border-0 shadow-sm p-4 mb-4">
+            <h2 class="h4 mb-4">Documents</h2>
+            <div class="alert alert-info d-flex mb-4">
+              <i class="fi-info-circle me-2 me-sm-3"></i>
+              <p class="fs-sm mb-0">Formats acceptés : PDF, DOC, DOCX. Taille maximale : 5MB par fichier.</p>
+            </div>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Documents cadastraux</label>
+                <input type="file" class="form-control form-control-lg" accept=".pdf,.doc,.docx" 
+                       (change)="handleDocumentsCadastraux($event)" multiple>
+                <div class="mt-2" *ngIf="documentsCadastrauxPreview.length > 0">
+                  <div class="d-flex align-items-center gap-2 mb-2" *ngFor="let doc of documentsCadastrauxPreview; let i = index">
+                    <i class="fi-file"></i>
+                    <span>{{ doc }}</span>
+                    <button type="button" class="btn-close ms-auto" (click)="removeDocumentCadastral(i)"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Certificat d'urbanisme</label>
+                <input type="file" class="form-control form-control-lg" accept=".pdf,.doc,.docx"
+                       (change)="handleCertificatUrbanisme($event)" multiple>
+                <div class="mt-2" *ngIf="certificatUrbanismePreview.length > 0">
+                  <div class="d-flex align-items-center gap-2 mb-2" *ngFor="let doc of certificatUrbanismePreview; let i = index">
+                    <i class="fi-file"></i>
+                    <span>{{ doc }}</span>
+                    <button type="button" class="btn-close ms-auto" (click)="removeCertificatUrbanisme(i)"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+  
+          <!-- Boutons de soumission -->
+          <div class="d-flex gap-2 justify-content-end">
+            <button type="button" class="btn btn-secondary" routerLink="/admin/lands">
+              Annuler
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+              <i class="fi-plus me-2"></i>
+              {{ isSubmitting ? 'Ajout en cours...' : 'Ajouter le terrain' }}
+            </button>
+          </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Message d'erreur -->
+  <div class="col-lg-10" *ngIf="message">
+    <div class="alert alert-danger">
+      {{ message }}
+    </div>
+  </div>
+  
+  <!-- Modal d'aperçu -->
+  <div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Aperçu de l'annonce</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card shadow-sm">
+            <div class="position-relative">
+              <img [src]="previews[0] || 'assets/img/placeholder.jpg'" class="card-img-top" alt="Aperçu du terrain">
+              <span class="badge bg-info position-absolute top-0 start-0 m-3">Nouveau</span>
+            </div>
+            <div class="card-body">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="card-title mb-0">{{ land.titre || 'Titre du terrain' }}</h5>
+                <div class="fs-5 fw-semibold text-primary">{{ land.prix | number }} FCFA</div>
+              </div>
+              <div class="card-text">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fi-map-pin me-1"></i>
+                  <span>{{ land.adresse || 'Adresse' }}</span>
+                </div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <span><i class="fi-map me-1"></i> {{ land.surface || 0 }} m²</span>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mb-2">
+                  <span class="badge bg-success" *ngIf="land.aEau">Eau</span>
+                  <span class="badge bg-success" *ngIf="land.aElectricite">Électricité</span>
+                  <span class="badge bg-success" *ngIf="land.constructible">Constructible</span>
+                  @for(caracteristique of land.caracteristiques; track caracteristique) {
+                    <span class="badge bg-secondary">{{ caracteristique }}</span>
+                  }
+                </div>
+                <p class="mb-0">{{ (land.description | slice:0:100) + '...' || 'Description courte...' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

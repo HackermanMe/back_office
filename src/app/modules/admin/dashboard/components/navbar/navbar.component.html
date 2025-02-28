@@ -1,0 +1,199 @@
+<!-- Navigation bar (Header) -->
+<header class="navbar navbar-expand-lg bg-white border-bottom fixed-top shadow-sm" style="height: 56px;">
+    <div class="container-fluid px-3">
+        <!-- Toggle Sidebar Button -->
+        <button class="btn btn-icon btn-sm d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebar">
+            <i class="fi-align-justify fs-5"></i>
+        </button>
+
+        <!-- Logo -->
+        <a class="navbar-brand me-auto d-flex align-items-center" routerLink="/dashboard">
+            <i class="fi-home text-primary fs-4 me-2"></i>
+            <span class="fs-5 fw-medium d-none d-sm-inline">ImmoAuto</span>
+        </a>
+
+        <!-- Navbar Actions -->
+        <div class="d-flex align-items-center gap-2">
+            <!-- Notifications - Hidden on mobile -->
+            <div class="dropdown d-none d-sm-block">
+                <button class="btn btn-icon btn-sm btn-light position-relative" type="button" data-bs-toggle="dropdown">
+                    <i class="fi-bell fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        3
+                        <span class="visually-hidden">notifications non lues</span>
+                    </span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end mt-2" style="width: 300px;">
+                    <div class="dropdown-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Notifications</h6>
+                        <a href="#" class="text-muted fs-sm">Marquer tout comme lu</a>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 bg-success bg-opacity-10 rounded-3 p-2">
+                                <i class="fi-check text-success"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-1 fs-sm">Nouvelle réservation</h6>
+                                <p class="mb-0 fs-xs text-muted">Villa #M2023-001</p>
+                                <small class="text-muted">Il y a 2 heures</small>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 bg-primary bg-opacity-10 rounded-3 p-2">
+                                <i class="fi-star text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-1 fs-sm">Nouveau message</h6>
+                                <p class="mb-0 fs-xs text-muted">De Jean Dupont</p>
+                                <small class="text-muted">Il y a 3 heures</small>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item text-center fs-sm">
+                        Voir toutes les notifications
+                    </a>
+                </div>
+            </div>
+
+            <!-- Messages - Hidden on mobile -->
+            <div class="dropdown d-none d-sm-block">
+                <button class="btn btn-icon btn-sm btn-light position-relative" type="button" data-bs-toggle="dropdown">
+                    <i class="fi-chat fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        5
+                        <span class="visually-hidden">messages non lus</span>
+                    </span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end mt-2" style="width: 300px;">
+                    <div class="dropdown-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Messages</h6>
+                        <a href="#" class="text-muted fs-sm">Tout marquer comme lu</a>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <img src="assets/img/account/avatar-sm.jpg" class="rounded-circle" width="40"
+                                    alt="Avatar">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-1 fs-sm">Marie Martin</h6>
+                                <p class="mb-0 fs-xs text-muted">Question sur l'appartement...</p>
+                                <small class="text-muted">Il y a 15 min</small>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item text-center fs-sm">
+                        Voir tous les messages
+                    </a>
+                </div>
+            </div>
+
+            <!-- Theme switcher -->
+            <div class="dropdown d-none d-sm-block">
+                <button class="btn btn-icon btn-sm btn-light" type="button" data-bs-toggle="dropdown">
+                    <i class="fi-sun fs-5"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <button aria-pressed="true" class="dropdown-item active" data-bs-theme-value="light"
+                            type="button">
+                            <span class="theme-icon d-flex fs-base me-2">
+                                <i class="fi-sun"></i>
+                            </span>
+                            <span class="theme-label">Light</span>
+                            <i class="item-active-indicator fi-check ms-auto"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button aria-pressed="false" class="dropdown-item" data-bs-theme-value="dark" type="button">
+                            <span class="theme-icon d-flex fs-base me-2">
+                                <i class="fi-moon"></i>
+                            </span>
+                            <span class="theme-label">Dark</span>
+                            <i class="item-active-indicator fi-check ms-auto"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button aria-pressed="false" class="dropdown-item" data-bs-theme-value="auto" type="button">
+                            <span class="theme-icon d-flex fs-base me-2">
+                                <i class="fi-auto"></i>
+                            </span>
+                            <span class="theme-label">Auto</span>
+                            <i class="item-active-indicator fi-check ms-auto"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- User Menu -->
+            <div class="dropdown">
+                <button class="btn btn-sm btn-light dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-wrapper rounded-circle overflow-hidden" style="width: 32px; height: 32px;">
+                            <img src="assets/img/account/avatar-sm.jpg" alt="Admin" class="w-100 h-100 object-fit-cover">
+                        </div>
+                        <span class="d-none d-sm-inline ms-2">Admin</span>
+                    </div>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" routerLink="/admin/profile">
+                            <i class="fi-user me-2"></i>
+                            Mon profil
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" routerLink="/admin/settings">
+                            <i class="fi-settings me-2"></i>
+                            Paramètres
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" routerLink="/auth/login">
+                            <i class="fi-log-out me-2"></i>
+                            Déconnexion
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+<style>
+@media (max-width: 991.98px) {
+    .navbar .dropdown-menu {
+        position: fixed !important;
+        top: 56px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+}
+
+.btn-icon {
+    padding: 0.5rem;
+    line-height: 1;
+    border-radius: 0.5rem;
+}
+
+.avatar-wrapper img {
+    transition: transform 0.2s;
+}
+
+.avatar-wrapper:hover img {
+    transform: scale(1.05);
+}
+</style>

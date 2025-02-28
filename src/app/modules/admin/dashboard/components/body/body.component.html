@@ -1,0 +1,228 @@
+<!-- Page content -->
+<main class="main-content-wrapper">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Tableau de bord</h1>
+            <p class="text-muted">Bienvenue dans votre espace de gestion</p>
+        </div>
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                <i class="fi-plus me-2"></i>
+                Nouvelle annonce
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow">
+                        <div class="modal-header border-0 pb-0">
+                            <h5 class="modal-title fw-bold" id="addModalLabel">Ajouter une annonce</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body pt-4">
+                            <div class="d-grid gap-3">
+                                <button class="btn btn-outline-primary p-3 d-flex align-items-center justify-content-center" routerLink="./houses/new" data-bs-dismiss="modal">
+                                    <i class="fi-home fs-4 me-3"></i>
+                                    <span class="fw-medium">Bien immobilier</span>
+                                </button>
+                                <button class="btn btn-outline-primary p-3 d-flex align-items-center justify-content-center" routerLink="./cars/new" data-bs-dismiss="modal">
+                                    <i class="fi-car fs-4 me-3"></i>
+                                    <span class="fw-medium">Voiture</span>
+                                </button>
+                                <button class="btn btn-outline-primary p-3 d-flex align-items-center justify-content-center" routerLink="./lands/new" data-bs-dismiss="modal">
+                                    <i class="fi-map fs-4 me-3"></i>
+                                    <span class="fw-medium">Terrain</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row g-4 mb-4">
+        <!-- Propriétés -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-primary bg-opacity-10 rounded-3 p-3">
+                            <i class="fi fi-home text-primary fs-3"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            @if(houses) {
+                                <h3 class="mb-1">{{ houses }}</h3>
+                                <p class="mb-0">Propriétés</p>
+                            } @else {
+                                <p class="mb-0">Aucune propriété</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Véhicules -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-success bg-opacity-10 rounded-3 p-3">
+                            <i class="fi-car text-success fs-3"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            @if(cars) {
+                                <h3 class="mb-1">{{ cars }}</h3>
+                                <p class="mb-0">Véhicules</p>
+                            } @else {
+                                <p class="mb-0">Aucun véhicule</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Réservations -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-warning bg-opacity-10 rounded-3 p-3">
+                            <i class="fi-calendar text-warning fs-3"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-1">56</h3>
+                            <p class="mb-0">Réservations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clients -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-info bg-opacity-10 rounded-3 p-3">
+                            <i class="fi-user text-info fs-3"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-1">1,247</h3>
+                            <p class="mb-0">Clients</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dernières annonces -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Dernières annonces</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Référence</th>
+                            <th>Type</th>
+                            <th>Titre</th>
+                            <th>Prix</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#M2023-001</td>
+                            <td>Maison</td>
+                            <td>Villa moderne avec piscine</td>
+                            <td>450,000 €</td>
+                            <td><span class="badge bg-success">Disponible</span></td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-light" title="Modifier"><i class="fi-edit"></i></button>
+                                    <button class="btn btn-light" title="Supprimer"><i class="fi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#A2023-015</td>
+                            <td>Appartement</td>
+                            <td>Studio centre-ville</td>
+                            <td>185,000 €</td>
+                            <td><span class="badge bg-warning">Réservé</span></td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-light" title="Modifier"><i class="fi-edit"></i></button>
+                                    <button class="btn btn-light" title="Supprimer"><i class="fi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#V2023-089</td>
+                            <td>Voiture</td>
+                            <td>Mercedes Classe C 2022</td>
+                            <td>45,900 €</td>
+                            <td><span class="badge bg-danger">Vendu</span></td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-light" title="Modifier"><i class="fi-edit"></i></button>
+                                    <button class="btn btn-light" title="Supprimer"><i class="fi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dernières activités -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Activités récentes</h5>
+        </div>
+        <div class="card-body">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-primary"></div>
+                    <div class="timeline-content">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="mb-0">Nouvelle réservation</h6>
+                            <small class="text-muted">Il y a 2 heures</small>
+                        </div>
+                        <p class="mb-0">Jean Dupont a réservé la visite de la villa #M2023-001</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-success"></div>
+                    <div class="timeline-content">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="mb-0">Vente finalisée</h6>
+                            <small class="text-muted">Il y a 5 heures</small>
+                        </div>
+                        <p class="mb-0">Vente de l'appartement #A2023-012 finalisée</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-info"></div>
+                    <div class="timeline-content">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="mb-0">Nouvelle annonce</h6>
+                            <small class="text-muted">Il y a 1 jour</small>
+                        </div>
+                        <p class="mb-0">Nouvelle voiture ajoutée : BMW Série 3 2023</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

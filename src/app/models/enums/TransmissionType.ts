@@ -1,0 +1,5 @@
+export enum TransmissionType {
+    MANUELLE = 'MANUELLE',
+    AUTOMATIQUE = 'AUTOMATIQUE',
+    SEMI_AUTOMATIQUE = 'SEMI_AUTOMATIQUE'
+}

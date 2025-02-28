@@ -1,0 +1,327 @@
+<!-- Page content -->
+<div class="container pt-4 pb-5">
+  <div class="row justify-content-center">
+    <!-- Formulaire d'ajout d'une propriété -->
+    <div class="col-lg-10">
+      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+
+          <h1 class="h2 mb-0">Ajouter une propriété</h1>
+          <p class="text-muted">Remplissez les informations de la propriété</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#previewModal">
+            <i class="fi-eye me-2"></i>
+            Aperçu
+          </button>
+          <button type="button" class="btn btn-primary" routerLink="/admin/houses">
+            <i class="fi-list me-2"></i>
+            Liste des propriétés
+          </button>
+        </div>
+      </div>
+
+      <form id="addHouseForm">
+        <!-- Photos -->
+        <section class="card card-body border-0 shadow-sm p-4 mb-4">
+          <h2 class="h4 mb-4">Photos</h2>
+          <div class="alert alert-info d-flex mb-4">
+            <i class="fi-info-circle me-2 me-sm-3"></i>
+            <p class="fs-sm mb-0">Vous pouvez ajouter jusqu'à 10 photos. Format supporté : JPG, JPEG ou PNG. Taille maximale : 2MB.</p>
+          </div>
+          <div class="row g-3">
+            <!-- Upload button -->
+            <div class="col-12">
+              <label for="uploadInput" class="d-flex align-items-center justify-content-center position-relative h-100 cursor-pointer bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-4">
+                <div class="text-center">
+                  <i class="fi-plus-circle fs-3 text-muted mb-2"></i>
+                  <div class="text-muted">Glissez vos photos ici ou cliquez pour sélectionner</div>
+                </div>
+              </label>
+              <input #fileInput type="file" id="uploadInput" class="d-none" accept="image/jpeg,image/png" multiple (change)="handleFileInput($event)">
+            </div>
+          </div>
+          <!-- Preview of uploaded images -->
+          <div class="row mt-4 g-3">
+            <div class="col-4" *ngFor="let preview of previews; let i = index">
+              <div class="position-relative">
+                <img [src]="preview" class="img-fluid rounded">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-2" (click)="removeFile(i)"></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Informations de base -->
+        <section class="card card-body border-0 shadow-sm p-4 mb-4">
+          <h2 class="h4 mb-4">Informations de base</h2>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label" for="type">Type de bien <span class="text-danger">*</span></label>
+              <select class="form-select form-select-lg" id="type" required>
+                <option value="">Sélectionner un type</option>
+                <option value="house">Maison</option>
+                <option value="apartment">Appartement</option>
+                <option value="villa">Villa</option>
+                <option value="studio">Studio</option>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="status">Statut <span class="text-danger">*</span></label>
+              <select class="form-select form-select-lg" id="status" required>
+                <option value="">Sélectionner un statut</option>
+                <option value="sale">À vendre</option>
+                <option value="rent">À louer</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="title">Titre de l'annonce <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" id="title" required>
+            </div>
+          </div>
+        </section>
+
+        <!-- Localisation -->
+        <section class="card card-body border-0 shadow-sm p-4 mb-4">
+          <h2 class="h4 mb-4">Localisation</h2>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label" for="address">Adresse <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" id="address" required>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="city">Ville <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" id="city" required>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="state">Région</label>
+              <input type="text" class="form-control form-control-lg" id="state">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="zip">Code postal <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-lg" id="zip" required>
+            </div>
+          </div>
+        </section>
+
+        <!-- Caractéristiques -->
+        <section class="card card-body border-0 shadow-sm p-4 mb-4">
+          <h2 class="h4 mb-4">Caractéristiques</h2>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label" for="surface">Surface (m²) <span class="text-danger">*</span></label>
+              <input type="number" class="form-control form-control-lg" id="surface" required>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="rooms">Nombre de pièces <span class="text-danger">*</span></label>
+              <input type="number" class="form-control form-control-lg" id="rooms" required>
+            </div>
+            <!-- Chambres -->
+            <div class="col-12 mb-4">
+              <label class="form-label fw-bold mb-3">Nombre de chambres <span class="text-danger">*</span></label>
+              <div class="d-flex flex-wrap gap-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bedrooms" id="bedrooms-any" checked>
+                  <label class="form-check-label" for="bedrooms-any">
+                    Peu importe
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bedrooms" id="bedrooms-1">
+                  <label class="form-check-label" for="bedrooms-1">
+                    <i class="fi-bed-single me-2"></i>1
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bedrooms" id="bedrooms-2">
+                  <label class="form-check-label" for="bedrooms-2">
+                    <i class="fi-bed-single me-2"></i>2
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bedrooms" id="bedrooms-3">
+                  <label class="form-check-label" for="bedrooms-3">
+                    <i class="fi-bed-single me-2"></i>3
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bedrooms" id="bedrooms-4">
+                  <label class="form-check-label" for="bedrooms-4">
+                    <i class="fi-bed-single me-2"></i>4
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bedrooms" id="bedrooms-5">
+                  <label class="form-check-label" for="bedrooms-5">
+                    <i class="fi-bed-single me-2"></i>5+
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Salles de bain -->
+            <div class="col-12">
+              <label class="form-label fw-bold mb-3">Nombre de salles de bain <span class="text-danger">*</span></label>
+              <div class="d-flex flex-wrap gap-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bathrooms" id="bathrooms-any" checked>
+                  <label class="form-check-label" for="bathrooms-any">
+                    Peu importe
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bathrooms" id="bathrooms-1">
+                  <label class="form-check-label" for="bathrooms-1">
+                    <i class="fi-shower me-2"></i>1
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bathrooms" id="bathrooms-2">
+                  <label class="form-check-label" for="bathrooms-2">
+                    <i class="fi-shower me-2"></i>2
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bathrooms" id="bathrooms-3">
+                  <label class="form-check-label" for="bathrooms-3">
+                    <i class="fi-shower me-2"></i>3
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bathrooms" id="bathrooms-4">
+                  <label class="form-check-label" for="bathrooms-4">
+                    <i class="fi-shower me-2"></i>4
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bathrooms" id="bathrooms-5">
+                  <label class="form-check-label" for="bathrooms-5">
+                    <i class="fi-shower me-2"></i>5+
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Équipements -->
+        <section class="card card-body border-0 shadow-sm p-4 mb-4">
+          <h2 class="h4 mb-4">Équipements</h2>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="garage">
+                <label class="form-check-label" for="garage">Garage</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="parking">
+                <label class="form-check-label" for="parking">Parking</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="pool">
+                <label class="form-check-label" for="pool">Piscine</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="garden">
+                <label class="form-check-label" for="garden">Jardin</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="terrace">
+                <label class="form-check-label" for="terrace">Terrasse</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="elevator">
+                <label class="form-check-label" for="elevator">Ascenseur</label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Prix -->
+        <section class="card card-body border-0 shadow-sm p-4 mb-4">
+          <h2 class="h4 mb-4">Prix</h2>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label" for="price">Prix <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <input type="number" class="form-control form-control-lg" id="price" required>
+                <span class="input-group-text">€</span>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="negotiable">
+                <label class="form-check-label" for="negotiable">Prix négociable</label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Description -->
+        <section class="card card-body border-0 shadow-sm p-4 mb-4">
+          <h2 class="h4 mb-4">Description</h2>
+          <div class="mb-4">
+            <label class="form-label" for="description">Description détaillée <span class="text-danger">*</span></label>
+            <textarea class="form-control form-control-lg" id="description" rows="6" required></textarea>
+          </div>
+          <div class="alert alert-info d-flex mb-0">
+            <i class="fi-info-circle me-2 me-sm-3"></i>
+            <p class="fs-sm mb-0">Une description détaillée augmente les chances de vente.</p>
+          </div>
+        </section>
+
+        <!-- Boutons de soumission -->
+        <div class="d-flex gap-2 justify-content-end">
+          <button type="button" class="btn btn-secondary" routerLink="/admin/houses">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fi-plus me-2"></i>
+            Ajouter la propriété
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal d'aperçu -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Aperçu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card shadow-sm">
+          <div class="position-relative">
+            <img src="assets/img/listings/real-estate/01.jpg" class="card-img-top" alt="Aperçu">
+            <span class="badge bg-info position-absolute top-0 start-0 m-2">Nouveau</span>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <h6 class="mb-0">Titre de la propriété</h6>
+              <div class="fw-semibold text-primary">Prix €</div>
+            </div>
+            <div class="card-text">
+              <div class="d-flex align-items-center mb-2">
+                <i class="fi-map-pin me-1"></i>
+                <span>Adresse</span>
+              </div>
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span><i class="fi-home me-1"></i> Surface m²</span>
+                <span><i class="fi-door me-1"></i> Pièces</span>
+                <span><i class="fi-bed me-1"></i> Chambres</span>
+                <span><i class="fi-bath me-1"></i> SDB</span>
+              </div>
+              <p class="mb-0">Description courte...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

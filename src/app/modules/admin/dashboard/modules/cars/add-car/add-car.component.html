@@ -1,0 +1,430 @@
+<!-- Page content -->
+<div class="container pt-4 pb-5">
+    <div class="row justify-content-center">
+      <!-- Formulaire d'ajout de voiture -->
+      <div class="col-lg-10">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h1 class="h2 mb-0">Ajouter une voiture</h1>
+            <p class="text-muted">Remplissez les informations de la voiture</p>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary" style="background-color: #c92d2d; border-color: #c92d2d;" data-bs-toggle="modal" data-bs-target="#previewModal">
+              <i class="fi-eye me-2"></i>
+              Aperçu
+            </button>
+            <button type="button" class="btn btn-primary" routerLink="../">
+              <i class="fi-list me-2"></i>
+              Liste des véhicules
+            </button>
+          </div>
+        </div>
+
+        <form (ngSubmit)="onSubmit()">
+          <!-- Photos -->
+          <section class="position-relative bg-body rounded p-4">
+            <div class="position-relative z-2 pb-md-2 px-md-2">
+              <h2 class="h4 mb-4">Photos</h2>
+              <div class="alert alert-info d-flex mb-4">
+                <i class="fi-info-circle me-2 me-sm-3"></i>
+                <p class="fs-sm mb-0">Vous pouvez ajouter jusqu'à 10 photos. Format supporté : JPG, JPEG ou PNG. Taille maximale : 2MB.</p>
+              </div>
+              <div class="row g-4">
+                <!-- Upload button -->
+                <div class="col">
+                  <label for="uploadInput" class="d-flex align-items-center justify-content-center position-relative h-100 cursor-pointer bg-body-tertiary border border-2 border-dotted rounded p-3">
+                    <div class="text-center">
+                      <i class="fi-plus-circle fs-4 text-secondary-emphasis mb-2"></i>
+                      <div class="hover-effect-underline fs-sm fw-medium">Glissez vos photos ici ou cliquez pour sélectionner</div>
+                    </div>
+                  </label>
+                  <input #fileInput type="file" id="uploadInput" class="d-none" accept="image/jpeg,image/png" multiple (change)="handleFileInput($event)">
+                </div>
+              </div>
+              <!-- Preview of uploaded images -->
+              <div class="row mt-4 g-3">
+                <div class="col-3" *ngFor="let preview of previews; let i = index">
+                  <div class="position-relative">
+                    <img [src]="preview" class="img-fluid rounded">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2" (click)="removeFile(i)"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Informations de base -->
+          <section class="position-relative bg-body rounded p-4 mt-4">
+            <div class="position-relative z-2 pb-md-2 px-md-2">
+              <h2 class="h4 mb-4">Informations de base</h2>
+              <div class="row g-3">
+                <div class="col-sm-12">
+                  <label class="form-label" for="titre">Titre de l'annonce <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-lg" id="titre" name="titre" [(ngModel)]="car.titre">
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label" for="marqueText">Marque <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <input type="text" class="form-control form-control-lg" id="marqueText" name="marqueText"
+                           placeholder="Entrez la marque" [ngModel]="car.modele?.marque?.nom"
+                           (ngModelChange)="updateMarqueName($event)">
+                    <select class="form-select form-select-lg" id="marque" name="marque" 
+                            (change)="onMarqueSelect($event)">
+                      <option value="">Sélectionner une marque</option>
+                      <option *ngFor="let m of marques" [value]="m.nom">
+                        {{m.nom}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label" for="modeleText">Modèle <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <input type="text" class="form-control form-control-lg" id="modeleText" name="modeleText"
+                           placeholder="Entrez le modèle" required [ngModel]="car.modele?.nom"
+                           (ngModelChange)="updateModelName($event)">
+                    <select class="form-select form-select-lg" id="modele" name="modele" 
+                            (change)="onModeleSelect($event)">
+                      <option value="">Sélectionner un modèle</option>
+                      <option *ngFor="let m of filteredModeles" [value]="m.nom">
+                        {{m.nom}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label" for="annee">Année <span class="text-danger">*</span></label>
+                  <input type="number" class="form-control form-control-lg" id="annee" name="annee" [(ngModel)]="car.annee">
+                  
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label" for="kilometrage">Kilométrage <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <input type="number" class="form-control form-control-lg" id="kilometrage" name="kilometrage" [(ngModel)]="car.kilometrage">
+                    <span class="input-group-text">km</span>
+                  </div>
+                  
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label" for="couleur">Couleur</label>
+                  <input type="text" class="form-control form-control-lg" id="couleur" name="couleur" [(ngModel)]="car.couleur">
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Caractéristiques -->
+          <section class="position-relative bg-body rounded p-4 mt-4">
+            <div class="position-relative z-2 pb-md-2 px-md-2">
+              <h2 class="h4 mb-4">Caractéristiques</h2>
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <label class="form-label" for="typeCarburant">Carburant <span class="text-danger">*</span></label>
+                  <select class="form-select form-select-lg" id="typeCarburant" name="typeCarburant" [(ngModel)]="car.typeCarburant">
+                    <option value="">Sélectionner un type</option>
+                    <option *ngFor="let type of fuelTypes" [value]="type">{{type}}</option>
+                  </select>
+                  
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label" for="transmission">Boîte de vitesse <span class="text-danger">*</span></label>
+                  <select class="form-select form-select-lg" id="transmission" name="transmission" [(ngModel)]="car.transmission">
+                    <option value="">Sélectionner un type</option>
+                    <option *ngFor="let type of transmissionTypes" [value]="type">{{type}}</option>
+                  </select>
+                  
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label" for="puissance">Puissance (ch)</label>
+                    <input type="number" class="form-control form-control-lg" id="puissance" name="puissance" [(ngModel)]="car.puissance">
+                </div>
+              </div>
+            </div>
+          </section>
+          <!-- Features -->
+          <section class="position-relative bg-body rounded p-4 mt-4">
+            <div class="position-relative z-1 pb-md-2 px-md-2">
+              <h2 class="h4 mb-1 mb-sm-2">Équipements</h2>
+              <div class="accordion accordion-alt-icon" id="features">
+                <!-- Extérieur -->
+                <div class="accordion-item">
+                  <h3 class="accordion-header" id="headingExterior">
+                    <button aria-controls="exterior" aria-expanded="true" class="accordion-button"
+                      data-bs-target="#exterior" data-bs-toggle="collapse" type="button">
+                      <span class="hover-effect-underline stretched-link me-2">Extérieur</span>
+                    </button>
+                  </h3>
+                  <div aria-labelledby="headingExterior" class="accordion-collapse collapse show"
+                    data-bs-parent="#features" id="exterior">
+                    <div class="accordion-body mt-n1">
+                      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 gy-3 gx-4">
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="phares-led" type="checkbox" (change)="updateCaracteristiques('Phares LED', $event)" />
+                            <label class="form-check-label" for="phares-led">Phares LED</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="antibrouillards" type="checkbox" (change)="updateCaracteristiques('Feux antibrouillard', $event)" />
+                            <label class="form-check-label" for="antibrouillards">Feux antibrouillard</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="retroviseurs-chauffants" type="checkbox" (change)="updateCaracteristiques('Rétroviseurs chauffants', $event)" />
+                            <label class="form-check-label" for="retroviseurs-chauffants">Rétroviseurs chauffants</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="retroviseurs-electriques" type="checkbox" (change)="updateCaracteristiques('Rétroviseurs électriques', $event)" />
+                            <label class="form-check-label" for="retroviseurs-electriques">Rétroviseurs électriques</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="capteur-pluie" type="checkbox" (change)="updateCaracteristiques('Capteur de pluie', $event)" />
+                            <label class="form-check-label" for="capteur-pluie">Capteur de pluie</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="toit-ouvrant" type="checkbox" (change)="updateCaracteristiques('Toit ouvrant', $event)" />
+                            <label class="form-check-label" for="toit-ouvrant">Toit ouvrant</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="jantes-alliage" type="checkbox" (change)="updateCaracteristiques('Jantes en alliage', $event)" />
+                            <label class="form-check-label" for="jantes-alliage">Jantes en alliage</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="vitres-teintees" type="checkbox" (change)="updateCaracteristiques('Vitres teintées', $event)" />
+                            <label class="form-check-label" for="vitres-teintees">Vitres teintées</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Intérieur -->
+                <div class="accordion-item">
+                  <h3 class="accordion-header" id="headingInterior">
+                    <button aria-controls="interior" aria-expanded="false" class="accordion-button collapsed"
+                      data-bs-target="#interior" data-bs-toggle="collapse" type="button">
+                      <span class="hover-effect-underline stretched-link me-2">Intérieur</span>
+                    </button>
+                  </h3>
+                  <div aria-labelledby="headingInterior" class="accordion-collapse collapse" data-bs-parent="#features"
+                    id="interior">
+                    <div class="accordion-body mt-n1">
+                      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 gy-3 gx-4">
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="climatisation" type="checkbox" (change)="updateCaracteristiques('Climatisation automatique', $event)" />
+                            <label class="form-check-label" for="climatisation">Climatisation automatique</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="sieges-chauffants" type="checkbox" (change)="updateCaracteristiques('Sièges chauffants', $event)" />
+                            <label class="form-check-label" for="sieges-chauffants">Sièges chauffants</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="volant-multifonction" type="checkbox" (change)="updateCaracteristiques('Volant multifonction', $event)" />
+                            <label class="form-check-label" for="volant-multifonction">Volant multifonction</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="sieges-cuir" type="checkbox" (change)="updateCaracteristiques('Sièges en cuir', $event)" />
+                            <label class="form-check-label" for="sieges-cuir">Sièges en cuir</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="regulateur-vitesse" type="checkbox" (change)="updateCaracteristiques('Régulateur de vitesse', $event)" />
+                            <label class="form-check-label" for="regulateur-vitesse">Régulateur de vitesse</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="gps" type="checkbox" (change)="updateCaracteristiques('GPS intégré', $event)" />
+                            <label class="form-check-label" for="gps">GPS intégré</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Sécurité -->
+                <div class="accordion-item">
+                  <h3 class="accordion-header" id="headingSafety">
+                    <button aria-controls="safety" aria-expanded="false" class="accordion-button collapsed"
+                      data-bs-target="#safety" data-bs-toggle="collapse" type="button">
+                      <span class="hover-effect-underline stretched-link me-2">Sécurité</span>
+                    </button>
+                  </h3>
+                  <div aria-labelledby="headingSafety" class="accordion-collapse collapse" data-bs-parent="#features"
+                    id="safety">
+                    <div class="accordion-body mt-n1">
+                      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 gy-3 gx-4">
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="abs" type="checkbox" (change)="updateCaracteristiques('ABS', $event)" />
+                            <label class="form-check-label" for="abs">ABS</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="esp" type="checkbox" (change)="updateCaracteristiques('ESP (Contrôle de stabilité)', $event)" />
+                            <label class="form-check-label" for="esp">ESP (Contrôle de stabilité)</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="airbags" type="checkbox" (change)="updateCaracteristiques('Airbags', $event)" />
+                            <label class="form-check-label" for="airbags">Airbags</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="camera-recul" type="checkbox" (change)="updateCaracteristiques('Caméra de recul', $event)" />
+                            <label class="form-check-label" for="camera-recul">Caméra de recul</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="radar-recul" type="checkbox" (change)="updateCaracteristiques('Radar de recul', $event)" />
+                            <label class="form-check-label" for="radar-recul">Radar de recul</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check mb-0">
+                            <input class="form-check-input" id="surveillance-angle-mort" type="checkbox" (change)="updateCaracteristiques('Surveillance d\'angle mort', $event)" />
+                            <label class="form-check-label" for="surveillance-angle-mort">Surveillance d'angle mort</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Prix -->
+          <section class="position-relative bg-body rounded p-4 mt-4">
+            <div class="position-relative z-1 pb-md-2 px-md-2">
+              <h2 class="h4 mb-3 mb-sm-4">Prix</h2>
+              <label class="form-label" for="prix">Prix <span class="text-danger">*</span></label>
+              <div class="position-relative mb-3 mb-md-4" style="max-width: 390px">
+                <i class="fi-euro position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+                <input class="form-control form-control-lg form-icon-start" type="number" id="prix" name="prix" min="1000" placeholder="Définir un prix juste" [(ngModel)]="car.prix">
+              </div>
+              <div class="form-check form-switch mb-3 mb-md-4">
+                <input class="form-check-input" type="checkbox" role="switch" id="negociable" name="negociable" [(ngModel)]="car.negociable">
+                <label class="form-check-label fw-medium" for="negociable">Prix négociable</label>
+              </div>
+              <div class="d-flex flex-column gap-3">
+                <div class="form-check mb-0">
+                  <input class="form-check-input" type="checkbox" id="paiementEnPlus" name="paiementEnPlus" [(ngModel)]="car.paiementEnPlus">
+                  <label class="form-check-label" for="paiementEnPlus">Paiement en plusieurs fois possible</label>
+                </div>
+                <div class="form-check mb-0">
+                  <input class="form-check-input" type="checkbox" id="echangePossible" name="echangePossible" [(ngModel)]="car.echangePossible">
+                  <label class="form-check-label" for="echangePossible">Échange possible</label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Description -->
+          <section class="position-relative bg-body rounded p-4 mt-4">
+            <div class="position-relative z-2 pb-md-2 px-md-2">
+              <h2 class="h4 mb-4">Description</h2>
+              <div class="mb-4">
+                <label class="form-label" for="description">Description détaillée <span class="text-danger">*</span></label>
+                <textarea class="form-control form-control-lg" id="description" name="description" rows="5" [(ngModel)]="car.description"
+                  placeholder="Décrivez l'état du véhicule, ses options, son historique..."></textarea>
+              </div>
+              <div class="alert alert-info d-flex mb-0">
+                <i class="fi-info-circle me-2 me-sm-3"></i>
+                <p class="fs-sm mb-0">Une description détaillée augmente les chances de vente.</p>
+              </div>
+            </div>
+          </section>
+          <!-- Boutons de soumission -->
+          <div class="d-flex gap-2 justify-content-end">
+            <button type="button" class="btn btn-secondary" routerLink="/admin/cars">
+              Annuler
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+              <i class="fi-plus me-2"></i>
+              {{ isSubmitting ? 'Ajout en cours...' : 'Ajouter le véhicule' }}
+            </button>
+          </div>
+        </form>
+      </div>
+      @if(message) {
+      <!-- Message d'erreur -->
+      <div class="col-lg-10" *ngIf="message">
+        <div class="alert alert-danger">
+          {{ message }}
+        </div>
+      </div>
+
+      }
+
+      <!-- Aperçu Modal -->
+      <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="previewModalLabel">Aperçu de l'annonce</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="card shadow-sm">
+                <div class="position-relative">
+                  <img [src]="previews[0]" class="card-img-top" alt="Aperçu du véhicule">
+                  <span class="badge bg-info position-absolute top-0 start-0 m-3">Nouveau</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title mb-2 text-truncate">{{ car.titre }}</h5>
+                  <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="fs-5 fw-semibold text-primary">Prix {{ car.prix }} FCFA</div>
+                    <span class="badge bg-success" *ngIf="car.negociable">Négociable</span>
+                  </div>
+                  <div class="d-flex flex-column gap-2 mb-3">
+                    <div class="d-flex gap-3">
+                      <div class="fs-sm"><i class="fi-calendar me-1"></i> {{ car.annee }}</div>
+                      <div class="fs-sm"><i class="fi-dashboard me-1"></i> {{ car.kilometrage }} km</div>
+                    </div>
+                    <div class="d-flex gap-3">
+                      <div class="fs-sm"><i class="fi-gear me-1"></i> {{ car.transmission }}</div>
+                      <div class="fs-sm"><i class="fi-fuel me-1"></i> {{ car.typeCarburant }}</div>
+                    </div>
+                    <div class="d-flex gap-3">
+                      <div class="fs-sm"><i class="fi-car me-1"></i> {{ car.modele?.nom }}</div>
+                      <div class="fs-sm"><i class="fi-paint me-1"></i> {{ car.couleur }}</div>
+                    </div>
+                  </div>
+                  <div class="d-flex gap-2 mb-3">
+                    <span class="badge bg-secondary" *ngIf="car.paiementEnPlus">Paiement échelonné</span>
+                    <span class="badge bg-secondary" *ngIf="car.echangePossible">Échange possible</span>
+                  </div>
+                  <p class="card-text small text-muted mb-0">Cette prévisualisation se met à jour automatiquement lors de la saisie du formulaire</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
