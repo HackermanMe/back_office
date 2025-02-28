@@ -1,0 +1,89 @@
+<main class="content-wrapper bg-light min-vh-100 d-flex align-items-center py-5">
+  <section class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+        <div class="text-center mb-4">
+          <i class="fi-home text-primary display-4"></i>
+          <h1 class="h3 mt-3">ImmoAuto Togo</h1>
+          <p class="text-muted">Connectez-vous à votre espace administrateur</p>
+        </div>
+
+        <div class="card border-0 shadow-lg rounded-3">
+          <div class="card-body p-4 p-md-5">
+            <h2 class="h4 text-center mb-4 fw-medium">Connexion</h2>
+            
+            <form (ngSubmit)="onSubmit()" class="needs-validation">
+              <div class="mb-4">
+                <label for="email" class="form-label small fw-medium">Adresse email</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0">
+                    <i class="fi-mail text-muted"></i>
+                  </span>
+                  <input 
+                    id="email" 
+                    name="email" 
+                    type="email" 
+                    required
+                    [(ngModel)]="loginRequest.email"
+                    class="form-control border-start-0 ps-0" 
+                    placeholder="exemple@email.com">
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div class="d-flex justify-content-between">
+                  <label for="password" class="form-label small fw-medium">Mot de passe</label>
+                  <a href="#" class="text-decoration-none small">Mot de passe oublié ?</a>
+                </div>
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0">
+                    <i class="fi-lock text-muted"></i>
+                  </span>
+                  <input 
+                    id="password" 
+                    name="password" 
+                    type="password" 
+                    required
+                    [(ngModel)]="loginRequest.password"
+                    class="form-control border-start-0 ps-0"
+                    placeholder="••••••••">
+                </div>
+              </div>
+
+              <div class="alert alert-danger" *ngIf="error">
+                <i class="fi-alert-circle me-2"></i>
+                {{ error }}
+              </div>
+
+              <button 
+                type="submit" 
+                [disabled]="loading"
+                class="btn btn-primary w-100 py-2 fw-medium">
+                <div class="d-flex align-items-center justify-content-center">
+                  <div *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                  </div>
+                  {{ loading ? 'Connexion en cours...' : 'Se connecter' }}
+                </div>
+              </button>
+
+              <div class="text-center mt-4">
+                <span class="text-muted">Pas encore de compte ?</span>
+                <a routerLink="register" class="text-decoration-none fw-medium ms-2">
+                  Créer un compte
+                </a>
+              </div>
+            </form>
+
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <small class="text-muted">
+            © 2024 ImmoAuto Togo. Tous droits réservés.
+          </small>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
